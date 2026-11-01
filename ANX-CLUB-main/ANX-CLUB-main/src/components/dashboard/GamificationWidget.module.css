@@ -1,0 +1,125 @@
+.widgetContainer {
+  background: rgba(20, 20, 30, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.widgetContainer:hover {
+  transform: translateY(-2px);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  background: linear-gradient(90deg, #bb86fc, #3700b3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stageBadge {
+  background: rgba(187, 134, 252, 0.15);
+  color: #bb86fc;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid rgba(187, 134, 252, 0.3);
+}
+
+.xpSection {
+  margin-bottom: 24px;
+}
+
+.xpText {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 8px;
+}
+
+.xpTotal {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.xpNext {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.progressBarBg {
+  background: rgba(255, 255, 255, 0.1);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  background: linear-gradient(90deg, #bb86fc, #03dac6);
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.badgesSection {
+  margin-top: 16px;
+}
+
+.badgesTitle {
+  margin: 0 0 12px 0;
+  font-size: 0.9rem;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badgesList {
+  display: flex;
+  gap: 12px;
+}
+
+.badgeItem {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.badgeItem:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(187, 134, 252, 0.5);
+  box-shadow: 0 0 15px rgba(187, 134, 252, 0.3);
+}
+
+.badgeIcon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.noBadgesText {
+  color: #888;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin: 0;
+}

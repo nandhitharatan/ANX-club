@@ -1,0 +1,210 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.role == 'Admin' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin'
+      );
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == userId &&
+        (!('role' in request.resource.data) || request.resource.data.role == 'Member') &&
+        (!('membershipType' in request.resource.data) || request.resource.data.membershipType == 'Free' || request.resource.data.membershipType == 'free') &&
+        (!('xpTotal' in request.resource.data) || request.resource.data.xpTotal == 0) &&
+        (!('leadershipStage' in request.resource.data) || request.resource.data.leadershipStage == 'Member') &&
+        !('membershipExpiry' in request.resource.data);
+      allow update: if isAdmin() || (
+        isOwner(userId) && 
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'membershipType', 'membershipExpiry', 'xpTotal', 'leadershipStage', 'referralCode'])
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Events Collection
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Event Registrations Collection
+    match /eventRegistrations/{registrationId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || 
+        resource.data.memberId == request.auth.uid ||
+        isAdmin()
+      );
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    // Memberships Collection
+    match /memberships/{membershipId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.memberId == request.auth.uid ||
+        isAdmin()
+      );
+      allow write: if isAdmin();
+    }
+
+    // Mentors Collection
+    match /mentors/{mentorId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Mentor Bookings & Requests Collection
+    match /mentorRequests/{requestId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.memberId == request.auth.uid ||
+        isAdmin()
+      );
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    match /mentorBookings/{bookingId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.memberId == request.auth.uid ||
+        isAdmin()
+      );
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    // Projects Collection
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.authorId == request.auth.uid ||
+        isAdmin()
+      );
+      allow delete: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+
+    // Announcements Collection
+    match /announcements/{announcementId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Payments Collection (Server-side writes only)
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      allow write: if false; // Only Admin SDK on server can write
+    }
+
+    // Community / Chats Collection
+    match /chats/{chatId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    // Gamification & Ecosystem Collections
+    match /xpLedger/{txId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow write: if false; // Server-side only
+    }
+    match /badges/{badgeId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /userBadges/{userBadgeId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow write: if false; // Server-side only
+    }
+    match /leaderboardSnapshots/{snapshotId} {
+      allow read: if true;
+      allow write: if false; // Server-side only
+    }
+    match /leadershipStages/{stageId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Server-side only
+    }
+    match /notifications/{notifId} {
+      allow read: if isAuthenticated() && request.auth.uid == resource.data.recipientId;
+      allow update: if isAuthenticated() && request.auth.uid == resource.data.recipientId && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
+      allow create, delete: if false; // Server-side create
+    }
+    
+    // Product Incubation Pipeline
+    match /ideas/{ideaId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (resource.data.submitterId == request.auth.uid || isAdmin());
+      allow delete: if isAdmin();
+    }
+    match /ideaTeams/{teamId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+    match /sprints/{sprintId} {
+      allow read: if true;
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /certificates/{certId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /internships/{internshipId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /applications/{applicationId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+    match /analyticsSnapshots/{snapshotId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /roadmapProgress/{progressId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create, update: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+    match /reviewRequests/{reqId} {
+      allow read: if isAuthenticated() && (resource.data.memberId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated();
+      allow update: if isAdmin();
+    }
+    match /internshipApplications/{appId} {
+      allow read: if isAuthenticated() && (resource.data.memberId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+    match /internshipReviews/{reviewId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin();
+    }
+  }
+}

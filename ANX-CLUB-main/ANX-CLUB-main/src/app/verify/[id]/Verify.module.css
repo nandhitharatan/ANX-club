@@ -1,0 +1,135 @@
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  font-family: 'Inter', sans-serif;
+  color: #fff;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0 0 12px 0;
+  background: linear-gradient(135deg, #03dac6, #bb86fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  color: #aaa;
+  font-size: 1.1rem;
+}
+
+.verifyCard {
+  background: rgba(30, 30, 40, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(3, 218, 198, 0.3);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(3, 218, 198, 0.1);
+}
+
+.validHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 24px;
+}
+
+.iconSuccess {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 0 10px rgba(3, 218, 198, 0.5));
+}
+
+.validHeader h2 {
+  margin: 0;
+  color: #03dac6;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.detailItem label {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detailValue {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.detailValueHash {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #bb86fc;
+  word-break: break-all;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+.downloadBtn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background-color 0.2s ease;
+}
+
+.downloadBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.invalidCard {
+  background: rgba(40, 20, 20, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+}
+
+.iconError {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.invalidCard h2 {
+  color: #ff3b30;
+  margin: 0 0 16px 0;
+}
+
+.helpText {
+  color: #888;
+  font-size: 0.95rem;
+}
